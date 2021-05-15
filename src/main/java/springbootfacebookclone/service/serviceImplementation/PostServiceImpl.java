@@ -1,4 +1,4 @@
-package springbootfacebookclone.service;
+package springbootfacebookclone.service.serviceImplementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,11 +11,12 @@ import springbootfacebookclone.repository.CommentRepository;
 import springbootfacebookclone.repository.LikesRepository;
 import springbootfacebookclone.repository.PersonRepository;
 import springbootfacebookclone.repository.PostRepository;
+import springbootfacebookclone.service.PostService;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class PostServiceImpl implements PostService{
+public class PostServiceImpl implements PostService {
 
     @Autowired
     PostRepository postRepository;
@@ -39,6 +40,7 @@ public class PostServiceImpl implements PostService{
             Person user = personRepository.findById(userId).get();
 
             if(user != null){
+                post.setChecker("ACTIVE");
                 postRepository.save(post);
                 result = true;
             }else result = false;
@@ -51,6 +53,23 @@ public class PostServiceImpl implements PostService{
     }
 
     /**
+     * GET operation on Post
+     * @param postId
+     * @return boolean(true for successful creation and false on failure to create)
+     * */
+    public List<Post> getPostById(Long postId){
+        List<Post> postList = new ArrayList<>();
+
+        try{
+            postList= postRepository.findPostByPostId(postId);
+        }catch(Exception e){
+            System.out.println("Something went wrong1 "+e.getMessage());
+        }
+
+        return postList;
+    }
+
+    /**
      * GET by id operation on Post
      * @params postId
      * @return post object
@@ -59,8 +78,8 @@ public class PostServiceImpl implements PostService{
         List<PostMapper> posts = new ArrayList<>();
 
         try {
-              //get all posts
-            List<Post> postData = postRepository.findAll();
+            //get all posts
+            List<Post> postData = postRepository.findAllByCheckerIsOrderByPostIdDesc("ACTIVE");
 
             for (Post postEach:postData) {
 
@@ -68,7 +87,7 @@ public class PostServiceImpl implements PostService{
                 post.setId(postEach.getPostId());
                 post.setTitle(postEach.getTitle());
                 post.setBody(postEach.getBody());
-                post.setImageName(postEach.getImageName());
+                post.setImageName("/images/"+postEach.getImageName());
                 post.setName(postEach.getPerson().getLastname()+ " "+ postEach.getPerson().getFirstname());
 
                 //the total number of likes on this particular post
@@ -76,6 +95,7 @@ public class PostServiceImpl implements PostService{
                 int likeCount = numberOfLikes.size();
                 post.setNoLikes(likeCount);
 
+                //the total number of comments on this particular post
                 List<Comment> noOfComment = commentRepository.findAllByPostPostId(postEach.getPostId());
                 int commentCount = noOfComment.size();
                 post.setNoComments(commentCount);
@@ -96,4 +116,53 @@ public class PostServiceImpl implements PostService{
         return posts;
     }
 
+    /**
+     * CREATE operation on Comment
+     * @param person
+     * @param postId
+     * @param title
+     * @param body
+     * @return boolean(true for successful update and false on failure on post)
+     * */
+    public boolean editPost(Person person, Long postId, String title, String body) {
+        boolean status = false;
+
+        try {
+            Post post = postRepository.findById(postId).get();
+            post.setTitle(title);
+            post.setBody(body);
+            postRepository.save(post);
+
+            status = true;
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return status;
+    }
+
+    /**
+     * DELETE operation on Post
+     * @param postId
+     * @param personId
+     * @return boolean(true for successful creation and false on failure to create)
+     * */
+    public boolean deletePost(Long postId, Long personId){
+        boolean status =  false;
+
+        try {
+
+            Post post = postRepository.findPostByPostIdAndPersonId(postId, personId);
+
+            if(post != null){
+                post.setChecker("INACTIVE");
+                postRepository.save(post);
+                status = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return status;
+    }
 }

@@ -3,32 +3,33 @@ package springbootfacebookclone.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-
 import javax.persistence.*;
+import static javax.persistence.GenerationType.SEQUENCE;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Data
 @Entity
 public class Likes {
     @Id
     @SequenceGenerator(
-            name = "like_sequence",
-            sequenceName = "like_sequence",
+            name = "likes_sequence",
+            sequenceName = "likes_sequence",
             allocationSize = 1)
+    @GeneratedValue(
+            strategy  = SEQUENCE,
+            generator = "likes_sequence"
+    )
     @Column(
-            name = "id",
-            updatable = false
+            name = "id"
     )
     private Long id;
 
-    @OneToOne(optional = false)
+    @OneToOne
     @JoinColumn(name = "userId", referencedColumnName = "id")
     private Person person;
 
-    @OneToOne(optional = false)
+    @OneToOne
     @JoinColumn(name = "postId", referencedColumnName = "postId")
     private Post post;
 }

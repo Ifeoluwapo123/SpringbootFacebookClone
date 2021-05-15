@@ -37,7 +37,7 @@
     <link rel="stylesheet" th:href="@{style.css}"/>
 </head>
 <body>
-<div th:with="error=${session.message}">
+<div th:with="error=${session.mess}">
     <div th:if="${error} != null">
         <div class="alert alert-success" role="alert">
             <div th:text="${error}"></div>

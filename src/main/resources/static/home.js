@@ -20,17 +20,21 @@ window.onload = () => {
 
 //edit post
 function edit(postId){
-    window.location.href = "/edit.jsp?post="+postId;
+    window.location.href = "/edit/"+postId;
 }
 
 //comment on post
-function com(postId){
-    window.location.href = "/comment.jsp?post="+postId;
+function com(postId, noComment){
+    console.log("working");
+    if(noComment == 0) return;
+
+    window.location.href = "/comment/"+postId;
 }
 
 //like on post
 function like(postId, userId){
-    const URL = "/LikeServlet";
+    console.log("working", postId, userId);
+    const URL = "/processLike";
     let like = document.getElementById(postId).style.color;
     console.log(like);
 
@@ -81,33 +85,29 @@ function ajaxCall(url, dataCall){
         data: dataCall,
 
         success: function(data){
-            //console.log(data);
         },
         error: function(){
-            alert('error liking');
         }
     });
 }
 
 //delete post
 function del(postId){
-    console.log("working");
+    console.log("working", postId);
 
     const delPost = confirm("Are you sure you want to delete post");
 
     if(delPost){
         $.ajax({
             type: 'POST',
-            url: '/DeletePostServlet',
+            url: '/deletePost',
             data: {"postId": postId},
 
             success: function(data){
-                console.log(data);
-                alert(data);
                 window.location.reload();
             },
             error: function(){
-                alert('error deleting post');
+                window.location.reload();
             }
         });
     }

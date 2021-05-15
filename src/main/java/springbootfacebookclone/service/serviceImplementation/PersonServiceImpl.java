@@ -1,9 +1,10 @@
-package springbootfacebookclone.service;
+package springbootfacebookclone.service.serviceImplementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import springbootfacebookclone.model.Person;
 import springbootfacebookclone.repository.PersonRepository;
+import springbootfacebookclone.service.PersonService;
 import springbootfacebookclone.utils.PasswordHashing;
 
 @Service

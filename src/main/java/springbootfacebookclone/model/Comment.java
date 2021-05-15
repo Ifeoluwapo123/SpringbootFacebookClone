@@ -1,8 +1,14 @@
 package springbootfacebookclone.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import javax.persistence.*;
+import static javax.persistence.GenerationType.SEQUENCE;
+
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Comment {
     @Id
@@ -10,23 +16,28 @@ public class Comment {
             name = "comment_sequence",
             sequenceName = "comment_sequence",
             allocationSize = 1)
+    @GeneratedValue(
+            strategy  = SEQUENCE,
+            generator = "comment_sequence"
+    )
     @Column(
-            name = "id",
-            updatable = false
+            name = "id"
     )
     private Long id;
 
     @Column(
             name = "comment",
             nullable = false,
-            columnDefinition = "VARCHAR(45)"
+            columnDefinition = "TEXT"
     )
     private String comment;
 
     @ManyToOne
     @JoinColumn(name = "userId", referencedColumnName = "id")
     private Person person;
+
     @ManyToOne
+
     @JoinColumn(name = "postId", referencedColumnName = "postId")
     private Post post;
 }

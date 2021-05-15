@@ -1,11 +1,14 @@
 package springbootfacebookclone.model;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.List;
 import static javax.persistence.GenerationType.SEQUENCE;
-@Data
+
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Post {
     @Id
     @SequenceGenerator(
@@ -18,8 +21,7 @@ public class Post {
             generator = "post_sequence"
     )
     @Column(
-            name = "postId",
-            updatable = false
+            name = "postId"
     )
     private Long postId;
 
@@ -33,7 +35,7 @@ public class Post {
     @Column(
             name = "body",
             nullable = false,
-            columnDefinition = "VARCHAR(45)"
+            columnDefinition = "TEXT"
     )
     private String body;
 
@@ -44,20 +46,84 @@ public class Post {
     )
     private String imageName;
 
-//    @Column(
-//            name = "name",
-//            nullable = false,
-//            columnDefinition = "VARCHAR(45)"
-//    )
-//    private String name;
+    @Column(
+            name = "checker",
+            nullable = false,
+            columnDefinition = "VARCHAR(45)"
+    )
+    private String checker;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name = "userId", referencedColumnName = "id")
     private Person person;
 
-    @OneToMany(mappedBy = "person", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "person", cascade = CascadeType.REMOVE, fetch=FetchType.EAGER)
     private List<Comment> comments;
 
-    @OneToOne(mappedBy = "post")
+    @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private Likes mylike;
+
+    public Long getPostId() {
+        return postId;
+    }
+
+    public void setPostId(Long postId) {
+        this.postId = postId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public Likes getMylike() {
+        return mylike;
+    }
+
+    public void setMylike(Likes mylike) {
+        this.mylike = mylike;
+    }
+
+    public String getChecker() {
+        return checker;
+    }
+
+    public void setChecker(String checker) {
+        this.checker = checker;
+    }
 }
