@@ -62,11 +62,11 @@
                     <span th:text="${data.getUsername()}"></span></h6>
                     <div th:text="${data.getComment()}"></div>
 
-<!--                    <div th:if="${data.getUserId() == user.getId()}">-->
+                    <div th:if="${data.getUserId() == user.getId()}">
                         <p><em>Edit Comment</em></p>
                          <textarea class="edit-comment" placeholder="Edit comment here...">
-                    </textarea>
-<!--                    </div>-->
+                         </textarea>
+                    </div>
 
                     <button th:onclick="'del('+${data.postId}+', '+${data.getUserId()}+','+${data.getId()}+')'" class="btn btn-primary btn-md mt-3 btn-block"
                             th:if="${data.getUserId() == user.getId()}"

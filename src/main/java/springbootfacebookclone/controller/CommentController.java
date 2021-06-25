@@ -60,12 +60,7 @@ public class CommentController {
 
         Person person = (Person) session.getAttribute("user");
 
-        if(person == null) {
-            model.addAttribute("person", new Person());
-            model.addAttribute("login", new Login());
-            session.setAttribute("message", "!!!Please Login");
-            return "redirect:/index";
-        }
+        if(person == null) return "redirect:/";
 
         Long postId = post_id;
         List<CommentMapper> commentList = commentService.getComments(postId);
